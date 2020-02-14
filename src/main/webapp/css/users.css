@@ -1,0 +1,140 @@
+nav {
+	display: flex;
+	padding: 1em;
+	justify-content: space-between;
+	background-color: #eee;
+}
+
+nav .heading {
+	font-size: 1.2em;
+	font-weight: bold;
+	text-decoration: none;
+	color: #444;
+	cursor: pointer;
+}
+
+nav .heading:hover {
+	color: #888;
+}
+
+.container {
+	width: 60%;
+	margin: 2em auto;
+}
+
+.flex-container {
+	display: flex;
+	width: 75%;
+	margin: 2em auto;
+	justify-content: center;
+}
+
+
+.flex-container form {
+	width: 720px;
+}
+
+table {
+	text-align: center;
+}
+
+table,
+tr,
+td,
+th {
+	border-collapse: collapse;
+}
+
+.container table {
+	width: 100%;
+	clear: both;
+}
+
+.container td,
+.container th {
+	padding: 1em;
+}
+
+.container tr {
+	border-bottom: 1px solid #ddd;
+}
+
+.container tr:last-child {
+	border-bottom: none;
+}
+
+.btn {
+	cursor: pointer;
+	padding: .5rem 1rem;
+	font-size: 1.2em;
+	text-decoration: none;
+	color: #fff;
+	transition: 500ms;
+}
+
+.btn:hover {
+	opacity: .5;
+}
+
+.delete {
+	background-color: #f00;
+}
+
+.edit {
+	background-color: #0088ee;
+}
+
+.add {
+	background-color: #73d216;
+}
+
+.my {
+	display: block;
+	width: 90px;
+	text-align: center;
+	margin: 1em .5em;
+}
+
+.right {
+	float: right;
+}
+
+input {
+	outline: none;
+}
+
+label,
+input[type="text"],
+input[type="password"] {
+	display: block;
+}
+
+label {
+	font-weight: bold;
+}
+
+input[type="text"],
+select,
+input[type="password"] {
+	width: 100%;
+	border: 1px solid #bbb;
+	font-size: 1em;
+	padding: .3em;
+}
+
+.form-group {
+	margin-bottom: .5em;
+	padding: .5em;
+}
+
+input[type="submit"] {
+	cursor: pointer;
+	display: block;
+	padding: .5em 1em;
+	font-size: 1.2em;
+	margin: .5em auto 1em auto;
+}
+
+input[type="submit"]:hover {
+	background-color: #bbb;
+}

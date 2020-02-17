@@ -34,6 +34,7 @@
                     name="login"
                     value="${editUser.login}">
         </div>
+
     </div>
 
     <div class="form-group">
@@ -41,13 +42,22 @@
                    for="password">Password:</label>
                     <div class="col-sm-6">
                         <input type="password" class="form-control" id="password"
+                        title="  Should be minimum 8 characters.It can be lowercase and uppercase latin letters, numbers, special characters."
                        placeholder="Enter password" name="password"
-                       aria-describedby="passwordDescribe" >
+                       aria-describedby="passwordDescribe"  >
                         <small id="passwordDescribe" class="text-muted">
                         Long is minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters.
                         </small>
                     </div>
-            </div>
+                    <div class="col-sm-offset-3 col-sm-6 err-message">
+                    <c:if test="${passwordsNotEqual != null}">
+                         <div class="alert alert-danger" role="alert">
+                         Passwords are not equal. Correct them.
+                         </div>
+                    </c:if>
+                    </div>
+
+    </div>
 
         <div class="form-group">
             <label class="control-label col-sm-3"
@@ -59,38 +69,43 @@
                        Enter the new password again.
                        </small>
             </div>
+
         </div>
 
         <div class="form-group">
             <label class="control-label col-sm-3"
                    for="email">Email:</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="email"
-                       placeholder="Enter email" name="email" aria-describedby="emailDescribe" value="${editUser.email}">
+                <input type="text" class="form-control" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                       title="Correct pattern characters@characters.domain"
+                       placeholder="Enter email" name="email" aria-describedby="emailDescribe" value="${editUser.email}" required>
                        <small id="emailDescribe" class="text-muted">
                        Example *****@***.com
                        </small>
 
             </div>
-        </div>
+                    </div>
 
         <div class="form-group">
             <label class="control-label col-sm-3"
                    for="First Name">First Name:</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="First Name"
-                       placeholder="Enter first name" name="firstName" aria-describedby="firstNameDescribe" value="${editUser.firstName}">
+                <input type="text" class="form-control" id="First Name" pattern="^[A-Z]{1}[a-z]{1,25}"
+                       title="The first letter must be uppercase"
+                       placeholder="Enter first name" name="firstName" aria-describedby="firstNameDescribe" value="${editUser.firstName}" required>
                 <small id="firstNameDescribe" class="text-muted">
                     The first letter must be uppercase.
                 </small>
             </div>
+
         </div>
         <div class="form-group">
             <label class="control-label col-sm-3"
                    for="Last Name">Last Name:</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="Last Name"
-                       placeholder="Enter last name" name="lastName" aria-describedby="lastNameDescribe" value="${editUser.lastName}">
+                <input type="text" class="form-control" id="Last Name" pattern="^[A-Z]{1}[a-z]{1,25}"
+                title="The first letter must be uppercase"
+                       placeholder="Enter last name" name="lastName" aria-describedby="lastNameDescribe" value="${editUser.lastName}" required>
                 <small id="lastNameDescribe" class="text-muted">
                     The first letter must be uppercase.
                 </small>
@@ -101,8 +116,15 @@
                    for="Birthday">Birthday:</label>
             <div class="col-sm-6">
                 <input type="date" class="form-control" id="Birthday"
-                       placeholder="Enter birthday" name="birthday" value="${editUser.birthday}">
+                       placeholder="Enter birthday" name="birthday" value="${editUser.birthday}" required>
             </div>
+            <div class="col-sm-offset-3 col-sm-6 err-message">
+                         <c:if test="${dateNotCorrect != null}">
+                         <div class="alert alert-danger" role="alert">
+                              This date is not correct.
+                         </div>
+                         </c:if>
+                    </div>
         </div>
 
         <div class="form-group">
@@ -128,5 +150,6 @@
             </div>
         </div>
     </form>
+
     </body>
     </html>

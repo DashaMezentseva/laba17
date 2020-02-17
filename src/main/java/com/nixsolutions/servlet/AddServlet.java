@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.el.ELClass;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,12 +29,14 @@ public class AddServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
+        request.getSession().removeAttribute("passwordNotCorrect");
+        request.getSession().removeAttribute("passwordsNotEqual");
+        request.getSession().removeAttribute("dateNotCorrect");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-//        String id = request.getParameter("id");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String passwordAgain = request.getParameter("passwordAgain");
@@ -42,60 +46,26 @@ public class AddServlet extends HttpServlet {
         String birthday = request.getParameter("birthday");
         String role = request.getParameter("role");
 
-//        String regex = "[0-9]";
-//        if (!id.matches(regex)) {
-//            LOG.trace("Id hasn`t true format");
-//            response.sendRedirect("/add");
-//        }
-
-        String regex;
-        regex = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
-        if (!login.matches(regex)) {
-            LOG.trace("Login hasn`t true format");
+        Pattern pattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("passwordNotCorrect", true);
             response.sendRedirect("/add");
-        }
-
-        regex = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
-        if (!password.matches(regex)) {
-            LOG.trace("Password hasn`t a true format");
-            response.sendRedirect("/add");
+            return;
         }
 
         if (!password.equals(passwordAgain)) {
             LOG.trace("passwords are not equal");
+            request.getSession().setAttribute("passwordsNotEqual", true);
             response.sendRedirect("/add");
-        }
-
-        regex = "\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}";
-        if (!email.matches(regex)) {
-            LOG.trace("Email hasn`t a true format");
-            response.sendRedirect("/add");
-        }
-
-        regex = "^[A-Z]{1}[a-z]{1,25}";
-        if (!firstName.matches(regex)) {
-            LOG.trace("First name hasn`t a true format");
-            response.sendRedirect("/add");
-        }
-
-        regex = "^[A-Z]{1}[a-z]{1,25}";
-        if (!lastName.matches(regex)) {
-            LOG.trace("Last name hasn`t a true format");
-            response.sendRedirect("/add");
-        }
-
-
-        regex = "\\d{4}-\\d{2}-\\d{2}";
-
-        if (!birthday.matches(regex)) {
-            LOG.trace("Date isn`t true! True format is 2013-02-21.");
-            response.sendRedirect("/add");
+            return;
         }
 
         LocalDate localDate = Date.valueOf(birthday).toLocalDate();
         LocalDate now = LocalDate.now();
         if (localDate.isAfter(now)) {
             LOG.trace("This is incorrect date");
+            request.getSession().setAttribute("dateNotCorrect", true);
             response.sendRedirect("/add");
             return;
         }
@@ -103,18 +73,29 @@ public class AddServlet extends HttpServlet {
         JdbcUserDao jdbcUserDao = new JdbcUserDao();
         if (jdbcUserDao.findByLogin(login) != null) {
             LOG.trace("Another user has the same login. Change your login.");
+            request.getSession().setAttribute("sameLogin", true);
             request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
-        } else if (jdbcUserDao.findByEmail(email) != null) {
-            LOG.trace("Another user has the same email. Change your email.");
-            request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
-
+            return;
         } else {
-            User newUser = new User(login, password, email, firstName, lastName, Date.valueOf(birthday), Long.parseLong(role));
-            jdbcUserDao.create(newUser);
-            doGet(request, response);
+            request.getSession().removeAttribute("sameLogin");
         }
 
+        if (jdbcUserDao.findByEmail(email) != null) {
+            LOG.trace("Another user has the same email. Change your email.");
+            request.getSession().setAttribute("sameEmail", true);
+            request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
+            return;
+        } else {
+            request.getSession().removeAttribute("sameEmail");
+        }
+
+        User newUser = new User(login, password, email, firstName, lastName, Date.valueOf(birthday), Long.valueOf(role));
+        jdbcUserDao.create(newUser);
+        //doGet(request, response);
+        response.sendRedirect("/home");
     }
 
-
 }
+
+
+

@@ -20,13 +20,15 @@
 <h1>Add User</h1>
 
 <form method="post" class="form-horizontal" action="/add">
-    <input type="hidden" name="id" value="${newUser.id}">
+    <input type="hidden" name="id" value="${newUser.id}" >
     <div class="form-group">
         <label class="control-label col-sm-3"
                for="login">Login:</label>
         <div class="col-sm-6">
             <input
                     type="text"
+                    pattern="^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$"
+                    title="2-20 characters. It can be letters and numbers"
                     class="form-control"
                     id="login"
                     placeholder="Enter login"
@@ -35,21 +37,36 @@
                     aria-describedby="loginDescribe"
                     required>
             <small id="loginDescribe" class="text-muted">
-                Long should be 2-20 characters. It can be letters and numbers.
+                2-20 characters. It can be letters and numbers.
             </small>
         </div>
+        <div class="col-sm-offset-3 col-sm-6 err-message">
+                            <c:if test="${sameLogin != null}">
+                                <div class="alert alert-danger" role="alert">
+                                    This login already exists.
+                                </div>
+                            </c:if>
+                </div>
     </div>
 
         <div class="form-group">
             <label class="control-label col-sm-3"
                for="password">Password:</label>
                 <div class="col-sm-6">
-                    <input type="password" class="form-control" id="password"
+                    <input type="password" class="form-control" id="password" pattern="(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+                    title="  Should be minimum 8 characters.It can be lowercase and uppercase latin letters, numbers, special characters."
                    placeholder="Enter password" name="password"
                    value="${newUser.password}" aria-describedby="passwordDescribe" required>
                     <small id="passwordDescribe" class="text-muted">
-                    Long is minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters.
+                    Minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters.
                     </small>
+                </div>
+                <div class="col-sm-offset-3 col-sm-6 err-message">
+                                                    <c:if test="${passwordsNotEqual != null}">
+                                                        <div class="alert alert-danger" role="alert">
+                                                            Passwords are not equal. Correct them.
+                                                        </div>
+                                                    </c:if>
                 </div>
         </div>
 
@@ -57,7 +74,8 @@
         <label class="control-label col-sm-3"
                for="passwordAgain">Password again:</label>
         <div class="col-sm-6">
-            <input type="password" class="form-control" id="passwordAgain"
+            <input type="password" class="form-control" id="passwordAgain" pattern="(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+                   title=" Minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters"
                    placeholder="Password again" name="passwordAgain" aria-describedby="passwordAgainDescribe" required>
                    <small id="passwordAgainDescribe" class="text-muted">
                    Enter the new password again.
@@ -69,43 +87,61 @@
         <label class="control-label col-sm-3"
                for="email">Email:</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="email"
+            <input type="text" class="form-control" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            title="Correct pattern characters@characters.domain"
                    placeholder="Enter email" name="email" aria-describedby="emailDescribe" required>
                    <small id="emailDescribe" class="text-muted">
                    Example *****@***.com
                    </small>
-
         </div>
+        <div class="col-sm-offset-3 col-sm-6 err-message">
+                                    <c:if test="${sameEmail != null}">
+                                        <div class="alert alert-danger" role="alert">
+                                            This email already exists.
+                                        </div>
+                                    </c:if>
+                        </div>
+
+
     </div>
 
     <div class="form-group">
         <label class="control-label col-sm-3"
                for="First Name">First Name:</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="First Name"
+            <input type="text" class="form-control" id="First Name" pattern="^[A-Z]{1}[a-z]{1,25}"
+            title="The first letter must be uppercase"
                    placeholder="Enter first name" name="firstName" aria-describedby="firstNameDescribe" required>
             <small id="firstNameDescribe" class="text-muted">
                 The first letter must be uppercase.
             </small>
         </div>
-    </div>
+        </div>
     <div class="form-group">
         <label class="control-label col-sm-3"
                for="Last Name">Last Name:</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="Last Name"
+            <input type="text" class="form-control" id="Last Name" pattern="^[A-Z]{1}[a-z]{1,25}"
+            title="The first letter must be uppercase"
                    placeholder="Enter last name" name="lastName" aria-describedby="lastNameDescribe" required>
             <small id="lastNameDescribe" class="text-muted">
                 The first letter must be uppercase.
             </small>
         </div>
-    </div>
+            </div>
     <div class="form-group">
         <label class="control-label col-sm-3"
                for="Birthday">Birthday:</label>
         <div class="col-sm-6">
             <input type="date" class="form-control" id="Birthday"
                    placeholder="Enter birthday" name="birthday" required>
+        </div>
+        <div class="col-sm-offset-3 col-sm-6 err-message">
+             <c:if test="${dateNotCorrect != null}">
+             <div class="alert alert-danger" role="alert">
+                  This date is not correct.
+             </div>
+             </c:if>
         </div>
     </div>
 
@@ -132,5 +168,6 @@
         </div>
     </div>
 </form>
+
 </body>
 </html>

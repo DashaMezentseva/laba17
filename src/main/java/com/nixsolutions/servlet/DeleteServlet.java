@@ -1,5 +1,6 @@
 package com.nixsolutions.servlet;
 
+import com.nixsolutions.DataSource;
 import com.nixsolutions.JdbcUserDao;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class DeleteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("loggedUser");
-        JdbcUserDao jdbcUserDao = new JdbcUserDao();
+        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
         String login = request.getParameter("userLogin");
 
         jdbcUserDao.remove(jdbcUserDao.findByLogin(login));

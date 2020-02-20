@@ -11,37 +11,22 @@ import org.slf4j.LoggerFactory;
 
 public class AbstractJdbcDao {
 
-    private BasicDataSource dataSource = null;
-
-    public void setDataSource(BasicDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
+    private BasicDataSource dataSource;
 
     private static final Logger LOGGER = LoggerFactory
         .getLogger(AbstractJdbcDao.class);
 
-    public BasicDataSource getDataSource() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("test");
-
-        if (dataSource == null) {
-            dataSource = new BasicDataSource();
-            dataSource.setDriverClassName(resourceBundle.getString("driver"));
-            dataSource.setUrl(resourceBundle.getString("url"));
-            dataSource.setUsername(resourceBundle.getString("user"));
-            dataSource.setPassword(resourceBundle.getString("password"));
-            dataSource.setMaxIdle(10);
-            dataSource.setMinIdle(5);
-            dataSource.setMaxOpenPreparedStatements(50);
-        }
-        return dataSource;
-
+    public AbstractJdbcDao(BasicDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public synchronized Connection createConnection() {
+    public AbstractJdbcDao() {
+    }
+
+    protected synchronized Connection createConnection() {
         Connection connection = null;
         try {
-            connection = getDataSource().getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException e) {

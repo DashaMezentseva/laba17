@@ -4,8 +4,6 @@ import static org.dbunit.Assertion.assertEqualsIgnoreCols;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import com.nixsolutions.DBUnitConfig;
-import com.nixsolutions.JdbcRoleDao;
 import com.nixsolutions.dao.RoleDao;
 import com.nixsolutions.entity.Role;
 import org.dbunit.dataset.ITable;
@@ -24,7 +22,7 @@ public class JdbcRoleDaoTest extends DBUnitConfig {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        roleDao = new JdbcRoleDao();
+        roleDao = new JdbcRoleDao(new DataSource().getDataSourceTest());
         fillTable(FILL_DATASET);
         roles = new Role[4];
 

@@ -1,17 +1,13 @@
 package com.nixsolutions.servlet;
 
-import com.nixsolutions.JdbcRoleDao;
+import com.nixsolutions.DataSource;
 import com.nixsolutions.JdbcUserDao;
-import com.nixsolutions.dao.UserDao;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.el.ELClass;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 @WebServlet("/add")
 public class AddServlet extends HttpServlet {
@@ -109,7 +104,7 @@ public class AddServlet extends HttpServlet {
             return;
         }
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao();
+        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
         if (jdbcUserDao.findByLogin(login) != null) {
             LOG.trace("Another user has the same login. Change your login.");
             request.getSession().setAttribute("sameLogin", true);

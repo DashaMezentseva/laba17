@@ -1,5 +1,6 @@
 package com.nixsolutions.servlet;
 
+import com.nixsolutions.DataSource;
 import com.nixsolutions.JdbcUserDao;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class AdminServlet extends HttpServlet {
 
         User loggedUser = (User) request.getSession().getAttribute("loggedUser");
         if (loggedUser.getRoleId() == 2) {
-            JdbcUserDao jdbcUserDao = new JdbcUserDao();
+            JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
             request.setAttribute("users", jdbcUserDao.findAll());
             request.setAttribute("adminName", loggedUser.getLogin());
             request.getServletContext().getRequestDispatcher("/admin/admin.jsp").forward(request, response);

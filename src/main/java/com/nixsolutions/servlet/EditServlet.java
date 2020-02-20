@@ -1,5 +1,6 @@
 package com.nixsolutions.servlet;
 
+import com.nixsolutions.DataSource;
 import com.nixsolutions.JdbcUserDao;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao();
+        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
         String id = request.getParameter("userId");
 
         User user = jdbcUserDao.findById(id);
@@ -48,7 +49,7 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao();
+        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
 
         String oldPassword = (String) request.getSession().getAttribute("oldPassword");
 

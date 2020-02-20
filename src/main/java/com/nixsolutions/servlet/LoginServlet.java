@@ -1,5 +1,6 @@
 package com.nixsolutions.servlet;
 
+import com.nixsolutions.DataSource;
 import com.nixsolutions.JdbcUserDao;
 import com.nixsolutions.dao.AbstractJdbcDao;
 import com.nixsolutions.entity.User;
@@ -25,7 +26,7 @@ public class LoginServlet extends HttpServlet {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao();
+        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
         User user = jdbcUserDao.findByLogin(login);
 
         if (user == null) {

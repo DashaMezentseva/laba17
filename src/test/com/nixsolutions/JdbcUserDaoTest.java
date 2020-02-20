@@ -30,7 +30,7 @@ public class JdbcUserDaoTest extends DBUnitConfig {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        userDao = new JdbcUserDao();
+        userDao =  new JdbcUserDao(new DataSource().getDataSourceTest());
         fillTable(FILL_DATASET);
 
         roles = new Role[2];

@@ -48,22 +48,15 @@ public class JdbcUserDao extends AbstractJdbcDao implements UserDao {
     private static final String ROLE_ID = "ROLE_ID";
     private static final String FIND_USER_BY_ID ="SELECT * FROM user WHERE id =?";
 
-    @Override
-    public BasicDataSource getDataSource() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+    private BasicDataSource dataSource() {
+        return new BasicDataSource();
+    }
 
-        if (dataSource == null) {
-            dataSource = new BasicDataSource();
-            dataSource.setDriverClassName(resourceBundle.getString("driver"));
-            dataSource.setUrl(resourceBundle.getString("url"));
-            dataSource.setUsername(resourceBundle.getString("user"));
-            dataSource.setPassword(resourceBundle.getString("password"));
-            dataSource.setMaxIdle(10);
-            dataSource.setMinIdle(5);
-            dataSource.setMaxOpenPreparedStatements(50);
-        }
-        return dataSource;
+    public JdbcUserDao(BasicDataSource dataSource) {
+        super(dataSource);
+    }
 
+    public JdbcUserDao() {
     }
 
     @Override

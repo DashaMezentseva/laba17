@@ -10,6 +10,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
 <nav class="navbar-right">
 		<div class="message">
 		Admin ${adminName}
@@ -47,18 +48,26 @@
                                 </div>
                             </c:if>
                 </div>
+
+         <div class="col-sm-offset-3 col-sm-6 err-message">
+                    <c:if test="${loginNotCorrect != null}">
+                        <div class="alert alert-danger" role="alert">
+                            This login isn't correct. Should be 2-20 characters. It can be letters and numbers.
+                        </div>
+                    </c:if>
+                </div>
     </div>
 
         <div class="form-group">
             <label class="control-label col-sm-3"
                for="password">Password:</label>
                 <div class="col-sm-6">
-                    <input type="password" class="form-control" id="password" pattern="(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-                    title="  Should be minimum 8 characters.It can be lowercase and uppercase latin letters, numbers, special characters."
+                    <input type="password" class="form-control" id="password" pattern="^[0-9a-zA-Z]+$" minlength="4" maxlength="20"
+                    title="  Should be minimum 4 characters.It can be letters and numbers"
                    placeholder="Enter password" name="password"
                    value="${newUser.password}" aria-describedby="passwordDescribe" required>
                     <small id="passwordDescribe" class="text-muted">
-                    Minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters.
+                    Should be minimum 4 characters.It can be letters and numbers.
                     </small>
                 </div>
                 <div class="col-sm-offset-3 col-sm-6 err-message">
@@ -68,19 +77,28 @@
                                                         </div>
                                                     </c:if>
                 </div>
+               <div class="col-sm-offset-3 col-sm-6 err-message">
+                           <c:if test="${passwordNotCorrect != null}">
+                               <div class="alert alert-danger" role="alert">
+                                   This password isn't correct.
+                                    Should be minimum 4 characters.It can be letters and numbers.
+                               </div>
+                           </c:if>
+                       </div>
         </div>
 
     <div class="form-group">
         <label class="control-label col-sm-3"
                for="passwordAgain">Password again:</label>
         <div class="col-sm-6">
-            <input type="password" class="form-control" id="passwordAgain" pattern="(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-                   title=" Minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters"
+            <input type="password" class="form-control" id="passwordAgain" pattern="^[0-9a-zA-Z]+$" minlength="4" maxlength="20"
+                   title=" Should be minimum 4 characters.It can be letters and numbers"
                    placeholder="Password again" name="passwordAgain" aria-describedby="passwordAgainDescribe" required>
                    <small id="passwordAgainDescribe" class="text-muted">
                    Enter the new password again.
                    </small>
         </div>
+
     </div>
 
     <div class="form-group">
@@ -101,7 +119,13 @@
                                         </div>
                                     </c:if>
                         </div>
-
+<div class="col-sm-offset-3 col-sm-6 err-message">
+            <c:if test="${emailNotCorrect != null}">
+                <div class="alert alert-danger" role="alert">
+                    This email isn't correct. Example *****@***.com
+                </div>
+            </c:if>
+        </div>
 
     </div>
 
@@ -116,6 +140,14 @@
                 The first letter must be uppercase.
             </small>
         </div>
+        <div class="col-sm-offset-3 col-sm-6 err-message">
+                    <c:if test="${firstNameNotCorrect != null}">
+                        <div class="alert alert-danger" role="alert">
+                            This first name is not correct. The first letter must be uppercase.
+
+                        </div>
+                    </c:if>
+                </div>
         </div>
     <div class="form-group">
         <label class="control-label col-sm-3"
@@ -128,6 +160,15 @@
                 The first letter must be uppercase.
             </small>
         </div>
+        <div class="col-sm-offset-3 col-sm-6 err-message">
+                            <c:if test="${lastNameNotCorrect != null}">
+                                <div class="alert alert-danger" role="alert">
+                                    This last name is not correct. The first letter must be uppercase.
+
+                                </div>
+                            </c:if>
+                        </div>
+                </div>
             </div>
     <div class="form-group">
         <label class="control-label col-sm-3"
@@ -161,7 +202,7 @@
             <button type="submit" class="btn btn-success">  OK  </button>
         </div>
         <div class="col-sm-1">
-            <a href="/home"
+            <a href="/admin"
                class="btn btn-primary"
                role="button"
                aria-pressed="true">Cancel</a>
@@ -171,3 +212,5 @@
 
 </body>
 </html>
+
+

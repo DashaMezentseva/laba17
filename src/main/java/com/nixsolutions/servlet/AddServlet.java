@@ -28,10 +28,15 @@ public class AddServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
+        request.getServletContext().getRequestDispatcher("/admin/add.jsp").forward(request, response);
         request.getSession().removeAttribute("passwordNotCorrect");
         request.getSession().removeAttribute("passwordsNotEqual");
         request.getSession().removeAttribute("dateNotCorrect");
+        request.getSession().removeAttribute("loginNotCorrect");
+        request.getSession().removeAttribute("passwordNotCorrect");
+        request.getSession().removeAttribute("emailNotCorrect");
+        request.getSession().removeAttribute("firstNameNotCorrect");
+        request.getSession().removeAttribute("lastNameNotCorrect");
     }
 
     @Override
@@ -46,10 +51,10 @@ public class AddServlet extends HttpServlet {
         String birthday = request.getParameter("birthday");
         String role = request.getParameter("role");
 
-        Pattern pattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
-        Matcher matcher = pattern.matcher(password);
+        Pattern pattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
+        Matcher matcher = pattern.matcher(login);
         if (!matcher.matches()) {
-            request.getSession().setAttribute("passwordNotCorrect", true);
+            request.getSession().setAttribute("loginNotCorrect", true);
             response.sendRedirect("/add");
             return;
         }
@@ -60,6 +65,40 @@ public class AddServlet extends HttpServlet {
             response.sendRedirect("/add");
             return;
         }
+
+        pattern = Pattern.compile("^[0-9a-zA-Z]+$");
+        matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("passwordNotCorrect", true);
+            response.sendRedirect("/add");
+            return;
+        }
+
+        pattern = Pattern.compile("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$");
+        matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("emailNotCorrect", true);
+            response.sendRedirect("/add");
+            return;
+        }
+
+        pattern = Pattern.compile("^[A-Z]{1}[a-z]{1,25}");
+        matcher = pattern.matcher(firstName);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("firstNameNotCorrect", true);
+            response.sendRedirect("/add");
+            return;
+        }
+
+        pattern = Pattern.compile("^[A-Z]{1}[a-z]{1,25}");
+        matcher = pattern.matcher(lastName);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("lastNameNotCorrect", true);
+            response.sendRedirect("/add");
+            return;
+        }
+
+
 
         LocalDate localDate = Date.valueOf(birthday).toLocalDate();
         LocalDate now = LocalDate.now();
@@ -74,7 +113,7 @@ public class AddServlet extends HttpServlet {
         if (jdbcUserDao.findByLogin(login) != null) {
             LOG.trace("Another user has the same login. Change your login.");
             request.getSession().setAttribute("sameLogin", true);
-            request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
+            request.getServletContext().getRequestDispatcher("/admin/add.jsp").forward(request, response);
             return;
         } else {
             request.getSession().removeAttribute("sameLogin");
@@ -83,7 +122,7 @@ public class AddServlet extends HttpServlet {
         if (jdbcUserDao.findByEmail(email) != null) {
             LOG.trace("Another user has the same email. Change your email.");
             request.getSession().setAttribute("sameEmail", true);
-            request.getServletContext().getRequestDispatcher("/add.jsp").forward(request, response);
+            request.getServletContext().getRequestDispatcher("/admin/add.jsp").forward(request, response);
             return;
         } else {
             request.getSession().removeAttribute("sameEmail");
@@ -91,8 +130,9 @@ public class AddServlet extends HttpServlet {
 
         User newUser = new User(login, password, email, firstName, lastName, Date.valueOf(birthday), Long.valueOf(role));
         jdbcUserDao.create(newUser);
-        //doGet(request, response);
-        response.sendRedirect("/home");
+
+        response.sendRedirect("/admin");
+
     }
 
 }

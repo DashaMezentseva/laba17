@@ -19,12 +19,12 @@ public class DeleteServlet extends HttpServlet {
 
         jdbcUserDao.remove(jdbcUserDao.findByLogin(login));
         request.getSession().setAttribute("users", jdbcUserDao.findAll());
-        response.sendRedirect("/home");
+        response.sendRedirect("/admin");
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 
 }

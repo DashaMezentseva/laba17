@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ResourceBundle;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ public class JdbcRoleDao extends AbstractJdbcDao implements RoleDao {
 
     private static final Logger LOG = LoggerFactory
         .getLogger(JdbcRoleDao.class);
+    private BasicDataSource dataSource = null;
 
     private static final String INSERT_ROLE_SQL = "INSERT INTO role "
         + "VALUES(NULL,?)";
@@ -29,6 +32,24 @@ public class JdbcRoleDao extends AbstractJdbcDao implements RoleDao {
 
     private static final String ROLE_ID = "ID";
     private static final String ROLE_NAME = "NAME";
+
+    @Override
+    public BasicDataSource getDataSource() {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+
+        if (dataSource == null) {
+            dataSource = new BasicDataSource();
+            dataSource.setDriverClassName(resourceBundle.getString("driver"));
+            dataSource.setUrl(resourceBundle.getString("url"));
+            dataSource.setUsername(resourceBundle.getString("user"));
+            dataSource.setPassword(resourceBundle.getString("password"));
+            dataSource.setMaxIdle(10);
+            dataSource.setMinIdle(5);
+            dataSource.setMaxOpenPreparedStatements(50);
+        }
+        return dataSource;
+
+    }
 
     @Override
     public void create(Role role) {

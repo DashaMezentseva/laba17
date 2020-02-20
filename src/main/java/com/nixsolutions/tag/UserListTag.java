@@ -94,8 +94,8 @@ public class UserListTag implements Tag {
                 stringBuilder.append("</td>");
                 stringBuilder.append("<td>");
                 stringBuilder.append("<form action=\"/edit\"  method=\"get\">\n")
-                    .append("<input type=\"hidden\" name=\"userLogin\" value=")
-                    .append(user.getLogin()).append(">\n")
+                    .append("<input type=\"hidden\" name=\"userId\" value=")
+                    .append(user.getId()).append(">\n")
                     .append("<button type=\"submit\" class=\"btn btn-info ")
                     .append("\">Edit</button>\n")
                     .append("<a href=\"/delete?userLogin=").append(user.getLogin()).append("\"")

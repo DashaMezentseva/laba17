@@ -15,27 +15,37 @@ import org.apache.commons.dbcp2.BasicDataSource;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
 
         JdbcUserDao jdbcUserDao = new JdbcUserDao();
         User user = jdbcUserDao.findByLogin(login);
 
         if (user == null) {
-            doGet(req, resp);
+            doGet(request, response);
         } else if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
-            HttpSession session = req.getSession();
+            HttpSession session = request.getSession();
             session.setAttribute("loggedUser", user);
-            resp.sendRedirect("/home");
+            if (user.getRoleId() == 2) {
+                request.setAttribute("users", jdbcUserDao.findAll());
+                request.setAttribute("adminName", user.getLogin());
+                //response.sendRedirect("/admin/admin.jsp");
+                request.getServletContext().getRequestDispatcher("/admin/admin.jsp").forward(request, response);
+            }
+            if (user.getRoleId() == 1) {
+                request.setAttribute("userName", user.getLogin());
+                //response.sendRedirect("/user.jsp");
+                request.getServletContext().getRequestDispatcher("/user.jsp").forward(request, response);
+            }
         } else {
-            doGet(req, resp);
+            doGet(request, response);
         }
     }
 

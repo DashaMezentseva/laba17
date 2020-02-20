@@ -24,17 +24,24 @@ public class EditServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         JdbcUserDao jdbcUserDao = new JdbcUserDao();
-        String login = request.getParameter("userLogin");
+        String id = request.getParameter("userId");
 
-        User user = jdbcUserDao.findByLogin(login);
+        User user = jdbcUserDao.findById(id);
         request.getSession().setAttribute("editUser", user);
-        String password = user.getPassword();
+        String password = "";
+        if (user != null) {
+            password = user.getPassword();
+        }
 
         request.getSession().setAttribute("oldPassword", password);
-        request.getServletContext().getRequestDispatcher("/edit.jsp").forward(request, response);
+        request.getServletContext().getRequestDispatcher("/admin/edit.jsp").forward(request, response);
         request.getSession().removeAttribute("passwordNotCorrect");
         request.getSession().removeAttribute("passwordsNotEqual");
         request.getSession().removeAttribute("dateNotCorrect");
+        request.getSession().removeAttribute("passwordNotCorrect");
+        request.getSession().removeAttribute("emailNotCorrect");
+        request.getSession().removeAttribute("firstNameNotCorrect");
+        request.getSession().removeAttribute("lastNameNotCorrect");
 
     }
 
@@ -57,20 +64,54 @@ public class EditServlet extends HttpServlet {
 
         if (password == "null" || password.isEmpty() || password == "NULL") {
             password = oldPassword;
+            if (passwordAgain == "null" || passwordAgain.isEmpty() || passwordAgain == "NULL") {
+                passwordAgain = oldPassword;
+            }
         }
 
-//        Pattern pattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
-//        Matcher matcher = pattern.matcher(password);
-//        if (!matcher.matches()) {
-//            request.getSession().setAttribute("passwordNotCorrect", true);
-//            response.sendRedirect("/add");
-//            return;
-//        }
+        if (passwordAgain == "null" || passwordAgain.isEmpty() || passwordAgain == "NULL") {
+            passwordAgain = oldPassword;
+            if (password == "null" || password.isEmpty() || password == "NULL") {
+                password = oldPassword;
+            }
+        }
 
-        else if (!password.equals(passwordAgain)) {
+        Pattern pattern = Pattern.compile("^[0-9a-zA-Z]+$");
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("passwordNotCorrect", true);
+            response.sendRedirect("/edit?userId=" + id);
+            return;
+        }
+
+        pattern = Pattern.compile("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$");
+        matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("emailNotCorrect", true);
+            response.sendRedirect("/edit?userId=" + id);
+            return;
+        }
+
+        pattern = Pattern.compile("^[A-Z]{1}[a-z]{1,25}");
+        matcher = pattern.matcher(firstName);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("firstNameNotCorrect", true);
+            response.sendRedirect("/edit?userId=" + id);
+            return;
+        }
+
+        pattern = Pattern.compile("^[A-Z]{1}[a-z]{1,25}");
+        matcher = pattern.matcher(lastName);
+        if (!matcher.matches()) {
+            request.getSession().setAttribute("lastNameNotCorrect", true);
+            response.sendRedirect("/edit?userId=" + id);
+            return;
+        }
+
+        if (!password.equals(passwordAgain)) {
             LOG.trace("passwords are not equal");
             request.getSession().setAttribute("passwordsNotEqual", true);
-            response.sendRedirect("/edit?userLogin=" + login);
+            response.sendRedirect("/edit?userId=" + id);
             return;
         }
 
@@ -79,15 +120,14 @@ public class EditServlet extends HttpServlet {
         if (localDate.isAfter(now)) {
             LOG.trace("This is incorrect date");
             request.getSession().setAttribute("dateNotCorrect", true);
-            response.sendRedirect("/edit?userLogin=" + login);
+            response.sendRedirect("/edit?userId=" + id);
             return;
         }
 
-//        JdbcUserDao jdbcUserDao = new JdbcUserDao();
 
         User newUser = new User(Long.valueOf(id), login, password, email, firstName, lastName, Date.valueOf(birthday), Long.valueOf(role));
         jdbcUserDao.update(newUser);
-        response.sendRedirect("/home");
+        response.sendRedirect("/admin");
 
 
     }

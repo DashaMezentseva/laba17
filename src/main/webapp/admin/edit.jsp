@@ -10,6 +10,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
 <nav class="navbar-right">
 		<div class="message">
 		Admin ${adminName}
@@ -41,22 +42,30 @@
                 <label class="control-label col-sm-3"
                    for="password">Password:</label>
                     <div class="col-sm-6">
-                        <input type="password" class="form-control" id="password"
-                        title="  Should be minimum 8 characters.It can be lowercase and uppercase latin letters, numbers, special characters."
+                        <input type="password" class="form-control" id="password" pattern="^[0-9a-zA-Z]+$" minlength="4" maxlength="20"
+                        title="  Should be minimum 4 characters.It can be letters and numbers"
                        placeholder="Enter password" name="password"
                        aria-describedby="passwordDescribe"  >
                         <small id="passwordDescribe" class="text-muted">
-                        Long is minimum 8 characters. It can be lowercase and uppercase latin letters, numbers, special characters.
+                        Should be minimum 4 characters.It can be letters and numbers.
                         </small>
                     </div>
+
                     <div class="col-sm-offset-3 col-sm-6 err-message">
+                                               <c:if test="${passwordNotCorrect != null}">
+                                                   <div class="alert alert-danger" role="alert">
+                                                       This password isn't correct.
+                                                        minimum 4 characters.It can be letters and numbers.
+                                                   </div>
+                                               </c:if>
+                                           </div>
+<div class="col-sm-offset-3 col-sm-6 err-message">
                     <c:if test="${passwordsNotEqual != null}">
                          <div class="alert alert-danger" role="alert">
                          Passwords are not equal. Correct them.
                          </div>
                     </c:if>
                     </div>
-
     </div>
 
         <div class="form-group">
@@ -69,6 +78,13 @@
                        Enter the new password again.
                        </small>
             </div>
+            <div class="col-sm-offset-3 col-sm-6 err-message">
+                                <c:if test="${passwordsNotEqual != null}">
+                                    <div class="alert alert-danger" role="alert">
+                                        Passwords aren`t equal!
+                                    </div>
+                                </c:if>
+                            </div>
 
         </div>
 
@@ -84,6 +100,20 @@
                        </small>
 
             </div>
+            <div class="col-sm-offset-3 col-sm-6 err-message">
+                        <c:if test="${emailNotCorrect != null}">
+                            <div class="alert alert-danger" role="alert">
+                                This email isn't correct. Example *****@***.com
+                            </div>
+                        </c:if>
+                    </div>
+                    <div class="col-sm-offset-3 col-sm-6 err-message">
+                                                        <c:if test="${sameEmail != null}">
+                                                            <div class="alert alert-danger" role="alert">
+                                                                This email already exists.
+                                                            </div>
+                                                        </c:if>
+                                            </div>
                     </div>
 
         <div class="form-group">
@@ -98,6 +128,14 @@
                 </small>
             </div>
 
+<div class="col-sm-offset-3 col-sm-6 err-message">
+                    <c:if test="${firstNameNotCorrect != null}">
+                        <div class="alert alert-danger" role="alert">
+                            This first name is not correct. The first letter must be uppercase.
+
+                        </div>
+                    </c:if>
+                </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-3"
@@ -110,6 +148,15 @@
                     The first letter must be uppercase.
                 </small>
             </div>
+            <div class="col-sm-offset-3 col-sm-6 err-message">
+                                        <c:if test="${lastNameNotCorrect != null}">
+                                            <div class="alert alert-danger" role="alert">
+                                                This last name is not correct. The first letter must be uppercase.
+
+                                            </div>
+                                        </c:if>
+                                    </div>
+                            </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-3"
@@ -143,7 +190,7 @@
                 <button type="submit" class="btn btn-success">  OK  </button>
             </div>
             <div class="col-sm-1">
-                <a href="/home"
+                <a href="/admin"
                    class="btn btn-primary"
                    role="button"
                    aria-pressed="true">Cancel</a>

@@ -22,7 +22,7 @@ public class AbstractJdbcDao {
         .getLogger(AbstractJdbcDao.class);
 
     public BasicDataSource getDataSource() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("test");
 
         if (dataSource == null) {
             dataSource = new BasicDataSource();

@@ -18,7 +18,7 @@
 
 <!--  <servlet>-->
 <!--    <servlet-name>home</servlet-name>-->
-<!--    <servlet-class>com.nixsolutions.servlet.HomeServlet</servlet-class>-->
+<!--    <servlet-class>com.nixsolutions.filter.AdminFilter</servlet-class>-->
 <!--  </servlet>-->
 
 <!--  <servlet-mapping>-->

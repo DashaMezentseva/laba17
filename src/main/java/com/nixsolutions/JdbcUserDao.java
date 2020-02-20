@@ -10,13 +10,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JdbcUserDao extends AbstractJdbcDao implements UserDao {
 
+
     private static final Logger LOG = LoggerFactory
         .getLogger(JdbcUserDao.class);
+
+    private BasicDataSource dataSource = null;
 
     private static final String INSERT_USER_SQL = "INSERT INTO user "
         + "VALUES(NULL,?,?,?,?,?,?,?)";
@@ -41,6 +46,25 @@ public class JdbcUserDao extends AbstractJdbcDao implements UserDao {
     private static final String LAST_NAME = "LASTNAME";
     private static final String BIRTHDAY = "BIRTHDAY";
     private static final String ROLE_ID = "ROLE_ID";
+    private static final String FIND_USER_BY_ID ="SELECT * FROM user WHERE id =?";
+
+    @Override
+    public BasicDataSource getDataSource() {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+
+        if (dataSource == null) {
+            dataSource = new BasicDataSource();
+            dataSource.setDriverClassName(resourceBundle.getString("driver"));
+            dataSource.setUrl(resourceBundle.getString("url"));
+            dataSource.setUsername(resourceBundle.getString("user"));
+            dataSource.setPassword(resourceBundle.getString("password"));
+            dataSource.setMaxIdle(10);
+            dataSource.setMinIdle(5);
+            dataSource.setMaxOpenPreparedStatements(50);
+        }
+        return dataSource;
+
+    }
 
     @Override
     public void create(User user) {
@@ -230,6 +254,42 @@ public class JdbcUserDao extends AbstractJdbcDao implements UserDao {
 
         } catch (SQLException e) {
             LOG.error("Cannot find user by email", e);
+            rollbackConnection(connection);
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
+        }
+        return user;
+    }
+
+    public User findById(String id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        User user = null;
+
+        try {
+            connection = createConnection();
+            preparedStatement = connection.prepareStatement(FIND_USER_BY_ID);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getLong(ID));
+                user.setLogin(resultSet.getString(LOGIN));
+                user.setPassword(resultSet.getString(PASSWORD));
+                user.setEmail(resultSet.getString(EMAIL));
+                user.setFirstName(resultSet.getString(FIRST_NAME));
+                user.setLastName(resultSet.getString(LAST_NAME));
+                user.setBirthday(resultSet.getDate(BIRTHDAY));
+                user.setRoleId(resultSet.getLong(ROLE_ID));
+            }
+            connection.commit();
+
+        } catch (SQLException e) {
+            LOG.error("Cannot find user by id", e);
             rollbackConnection(connection);
             throw new RuntimeException(e);
         } finally {

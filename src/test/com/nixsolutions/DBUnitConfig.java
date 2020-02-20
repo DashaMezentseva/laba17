@@ -1,4 +1,5 @@
-import com.nixsolutions.dao.AbstractJdbcDao;
+package com.nixsolutions;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,17 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DBUnitConfig {
-    private BasicDataSource dataSource = null;
 
-    public void setDataSource(BasicDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private BasicDataSource dataSource;
+
 
     private static final Logger LOGGER = LoggerFactory
         .getLogger(DBUnitConfig.class);
 
     public BasicDataSource getDataSource() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("test");
 
         if (dataSource == null) {
             dataSource = new BasicDataSource();
@@ -46,8 +45,8 @@ public class DBUnitConfig {
 
     }
 
-    public synchronized Connection createConnection() {
-        Connection connection = null;
+    protected synchronized Connection createConnection() {
+        Connection connection;
         try {
             connection = getDataSource().getConnection();
             connection.setAutoCommit(false);
@@ -55,10 +54,11 @@ public class DBUnitConfig {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     public void setUp() throws Exception {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("database");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("test");
         System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS, resourceBundle.getString("driver"));
         System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL, resourceBundle.getString("url"));
         System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME, resourceBundle.getString("user"));

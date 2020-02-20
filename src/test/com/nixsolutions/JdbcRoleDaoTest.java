@@ -1,7 +1,10 @@
+package com.nixsolutions;
+
 import static org.dbunit.Assertion.assertEqualsIgnoreCols;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import com.nixsolutions.DBUnitConfig;
 import com.nixsolutions.JdbcRoleDao;
 import com.nixsolutions.dao.RoleDao;
 import com.nixsolutions.entity.Role;

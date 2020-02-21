@@ -41,7 +41,7 @@ public class AdminFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             User user = (User) session.getAttribute("loggedUser");
-            Long role = user.getRoleId();
+            Long role = user.getRole().getRoleId();
             boolean isUser = role.equals(1L);
             if (isUser) {
                 resp.sendRedirect(userURI);

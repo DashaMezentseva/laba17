@@ -44,7 +44,7 @@ public class LoginFilter implements Filter {
         }
         else if (loggedIn && loginRequest) {
             User user = (User) session.getAttribute("loggedUser");
-            Long role = user.getRoleId();
+            Long role = user.getRole().getRoleId();
             boolean isAdmin = role.equals(2L);
             boolean isUser = role.equals(1L);
             if (isAdmin) {

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <dataset>
     <role roleId="1" name="aaa"/>
     <role roleId="2" name="bbb"/>
+    <role roleId="3" name="ccc"/>
 
     <user userId="1" login="aaa" password="aaa" email="aaa"
           firstName="aaa" lastName="aaa" birthday="1990-01-01" roleId="2"/>
@@ -11,4 +11,5 @@
 
     <user userId="3" login="ccc" password="ccc" email="ccc"
           firstName="ccc" lastName="ccc" birthday="1992-03-03" roleId="1"/>
+
 </dataset>

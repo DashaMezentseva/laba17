@@ -21,7 +21,7 @@
 <h1>Add User</h1>
 
 <form method="post" class="form-horizontal" action="/add">
-    <input type="hidden" name="id" value="${newUser.id}" >
+    <input type="hidden" id="id" name="id" value="${newUser.userId}" >
     <div class="form-group">
         <label class="control-label col-sm-3"
                for="login">Login:</label>

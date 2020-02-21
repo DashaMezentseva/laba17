@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <role ID="1" NAME="aaa"/>
-    <role ID="2" NAME="bbb"/>
+<role roleId="1" name="aaa"/>
+<role roleId="2" name="bbb"/>
 
-    <USER ID="1" LOGIN="aaa" PASSWORD="aaa" EMAIL="aaa"
-          FIRSTNAME="aaa" LASTNAME="aaa" BIRTHDAY="1990-01-01" ROLE_ID="1"/>
+<user userId="1" login="aaa" password="aaa" email="aaa"
+      firstName="aaa" lastName="aaa" birthday="1990-01-01" roleId="2"/>
 
-    <USER ID="2" LOGIN="updateLogin" PASSWORD="updatePassword" EMAIL="updateEmail"
-          FIRSTNAME="updateFirstName" LASTNAME="updateLastName" BIRTHDAY="1991-02-02" ROLE_ID="2"/>
+<user userId="2" login="updateLogin" password="updatePassword" email="updateEmail"
+      firstName="updateFirstName" lastName="updateLastName" birthday="1991-02-02" roleId="3"/>
 
-    <USER ID="3" LOGIN="ccc" PASSWORD="ccc" EMAIL="ccc"
-          FIRSTNAME="ccc" LASTNAME="ccc" BIRTHDAY="1992-03-03" ROLE_ID="1"/>
+<user userId="3" login="ccc" password="ccc" email="ccc"
+      firstName="ccc" lastName="ccc" birthday="1992-03-03" roleId="1"/>
 </dataset>
-

@@ -21,7 +21,7 @@
 <h1>Edit User</h1>
 
 <form method="post" class="form-horizontal" action="/edit">
-    <input type="hidden" name="id" value="${editUser.id}">
+    <input type="hidden" id="id" name="id" value="${editUser.userId}">
     <input type="hidden" name="action" value="${editUser.login == null ? 'create' : 'update'}">
     <div class="form-group">
         <label class="control-label col-sm-3"
@@ -175,15 +175,25 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-3"
-                   for="Role">Role:</label>
-            <div class="col-sm-6">
-                <select class="form-control" id="Role" name="role">
-                    <option value="1">User</option>
-                    <option value="2">Admin</option>
-                </select>
-            </div>
-        </div>
+                    <label class="control-label col-sm-3"
+                           for="Role">Role:</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" id="Role" name="role">
+
+                        <c:choose>
+                         <c:when test ="${roleId == 1}">
+                            <option value="1">User</option>
+                            <option value="2">Admin</option>
+                         </c:when>
+                         <c:otherwise>
+                            <option value="2">Admin</option>
+                            <option value="1">User</option>
+                         </c:otherwise>
+                         </c:choose>
+
+                        </select>
+                    </div>
+                </div>
 
         <div class="form-group">
             <div class="col-sm-1 col-sm-offset-4">

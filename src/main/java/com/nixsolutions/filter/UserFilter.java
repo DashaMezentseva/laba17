@@ -40,7 +40,7 @@ public class UserFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             User user = (User) session.getAttribute("loggedUser");
-            Long role = user.getRoleId();
+            Long role = user.getRole().getRoleId();
             boolean isAdmin = role.equals(2L);
             if (isAdmin) {
                 resp.sendRedirect(adminURI);

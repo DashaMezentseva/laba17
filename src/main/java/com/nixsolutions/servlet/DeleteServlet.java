@@ -1,7 +1,6 @@
 package com.nixsolutions.servlet;
 
-import com.nixsolutions.DataSource;
-import com.nixsolutions.JdbcUserDao;
+import com.nixsolutions.HibernateUserDao;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -15,11 +14,11 @@ public class DeleteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("loggedUser");
-        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
+        HibernateUserDao hibernateUserDao = new HibernateUserDao();
         String login = request.getParameter("userLogin");
 
-        jdbcUserDao.remove(jdbcUserDao.findByLogin(login));
-        request.getSession().setAttribute("users", jdbcUserDao.findAll());
+        hibernateUserDao.remove(hibernateUserDao.findByLogin(login));
+        request.getSession().setAttribute("users", hibernateUserDao.findAll());
         response.sendRedirect("/admin");
     }
 

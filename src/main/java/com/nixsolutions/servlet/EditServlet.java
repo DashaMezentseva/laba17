@@ -1,7 +1,7 @@
 package com.nixsolutions.servlet;
 
-import com.nixsolutions.DataSource;
-import com.nixsolutions.JdbcUserDao;
+import com.nixsolutions.HibernateUserDao;
+import com.nixsolutions.entity.Role;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
 import java.sql.Date;
@@ -24,10 +24,13 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
-        String id = request.getParameter("userId");
+        HibernateUserDao hibernateUserDao = new HibernateUserDao();
+        Long id = Long.valueOf(request.getParameter("userId"));
 
-        User user = jdbcUserDao.findById(id);
+        User user = hibernateUserDao.findById(id);
+        Long roleId = user.getRole().getRoleId();
+        request.getSession().setAttribute("roleId", roleId);
+
         request.getSession().setAttribute("editUser", user);
         String password = "";
         if (user != null) {
@@ -49,11 +52,10 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
 
         String oldPassword = (String) request.getSession().getAttribute("oldPassword");
 
-        String id = request.getParameter("id");
+        String id = (request.getParameter("id"));
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String passwordAgain = request.getParameter("passwordAgain");
@@ -61,20 +63,18 @@ public class EditServlet extends HttpServlet {
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String birthday = request.getParameter("birthday");
-        String role = request.getParameter("role");
+        Long role = Long.valueOf(request.getParameter("role"));
 
-        if (password == "null" || password.isEmpty() || password == "NULL") {
+        if (password.isEmpty() && passwordAgain.isEmpty()) {
             password = oldPassword;
-            if (passwordAgain == "null" || passwordAgain.isEmpty() || passwordAgain == "NULL") {
-                passwordAgain = oldPassword;
-            }
+            passwordAgain = oldPassword;
         }
 
-        if (passwordAgain == "null" || passwordAgain.isEmpty() || passwordAgain == "NULL") {
-            passwordAgain = oldPassword;
-            if (password == "null" || password.isEmpty() || password == "NULL") {
-                password = oldPassword;
-            }
+        if (!password.equals(passwordAgain)) {
+            LOG.trace("passwords are not equal");
+            request.getSession().setAttribute("passwordsNotEqual", true);
+            response.sendRedirect("/edit?userId=" + id);
+            return;
         }
 
         Pattern pattern = Pattern.compile("^[0-9a-zA-Z]+$");
@@ -109,13 +109,6 @@ public class EditServlet extends HttpServlet {
             return;
         }
 
-        if (!password.equals(passwordAgain)) {
-            LOG.trace("passwords are not equal");
-            request.getSession().setAttribute("passwordsNotEqual", true);
-            response.sendRedirect("/edit?userId=" + id);
-            return;
-        }
-
         LocalDate localDate = Date.valueOf(birthday).toLocalDate();
         LocalDate now = LocalDate.now();
         if (localDate.isAfter(now)) {
@@ -125,9 +118,17 @@ public class EditServlet extends HttpServlet {
             return;
         }
 
+        String nameOfRole = "";
+        if (role == 1L) {
+            nameOfRole = "user";
+        }
+        if (role == 2) {
+            nameOfRole = "admin";
+        }
 
-        User newUser = new User(Long.valueOf(id), login, password, email, firstName, lastName, Date.valueOf(birthday), Long.valueOf(role));
-        jdbcUserDao.update(newUser);
+        HibernateUserDao hibernateUserDao = new HibernateUserDao();
+        User newUser = new User(Long.valueOf(id), login, password, email, firstName, lastName, Date.valueOf(birthday), new Role(role, nameOfRole));
+        hibernateUserDao.update(newUser);
         response.sendRedirect("/admin");
 
 

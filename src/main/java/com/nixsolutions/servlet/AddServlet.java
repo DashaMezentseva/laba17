@@ -1,7 +1,7 @@
 package com.nixsolutions.servlet;
 
-import com.nixsolutions.DataSource;
-import com.nixsolutions.JdbcUserDao;
+import com.nixsolutions.HibernateUserDao;
+import com.nixsolutions.entity.Role;
 import com.nixsolutions.entity.User;
 import java.io.IOException;
 import java.sql.Date;
@@ -37,6 +37,7 @@ public class AddServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        String id = request.getParameter("id");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String passwordAgain = request.getParameter("passwordAgain");
@@ -44,7 +45,8 @@ public class AddServlet extends HttpServlet {
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String birthday = request.getParameter("birthday");
-        String role = request.getParameter("role");
+        //String role = request.getParameter("role");
+        Long role = Long.valueOf(request.getParameter("role"));
 
         Pattern pattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
         Matcher matcher = pattern.matcher(login);
@@ -104,8 +106,8 @@ public class AddServlet extends HttpServlet {
             return;
         }
 
-        JdbcUserDao jdbcUserDao = new JdbcUserDao(new DataSource().getDataSource());
-        if (jdbcUserDao.findByLogin(login) != null) {
+        HibernateUserDao hibernateUserDao = new HibernateUserDao();
+        if (hibernateUserDao.findByLogin(login) != null) {
             LOG.trace("Another user has the same login. Change your login.");
             request.getSession().setAttribute("sameLogin", true);
             request.getServletContext().getRequestDispatcher("/admin/add.jsp").forward(request, response);
@@ -114,7 +116,7 @@ public class AddServlet extends HttpServlet {
             request.getSession().removeAttribute("sameLogin");
         }
 
-        if (jdbcUserDao.findByEmail(email) != null) {
+        if (hibernateUserDao.findByEmail(email) != null) {
             LOG.trace("Another user has the same email. Change your email.");
             request.getSession().setAttribute("sameEmail", true);
             request.getServletContext().getRequestDispatcher("/admin/add.jsp").forward(request, response);
@@ -122,9 +124,14 @@ public class AddServlet extends HttpServlet {
         } else {
             request.getSession().removeAttribute("sameEmail");
         }
+        String nameOfRole = "";
+        if (role == 1L)
+            nameOfRole = "user";
+        if (role == 2L)
+            nameOfRole = "admin";
 
-        User newUser = new User(login, password, email, firstName, lastName, Date.valueOf(birthday), Long.valueOf(role));
-        jdbcUserDao.create(newUser);
+        User newUser = new User(login, password, email, firstName, lastName, Date.valueOf(birthday), new Role(role, nameOfRole));
+        hibernateUserDao.create(newUser);
 
         response.sendRedirect("/admin");
 

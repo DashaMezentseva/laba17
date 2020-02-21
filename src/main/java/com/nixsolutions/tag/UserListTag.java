@@ -90,12 +90,12 @@ public class UserListTag implements Tag {
                 stringBuilder.append(ChronoUnit.YEARS.between(user.getBirthday().toLocalDate(), LocalDate.now()));
                 stringBuilder.append("</td>");
                 stringBuilder.append("<td>");
-                stringBuilder.append(user.getRoleId() == 2 ? "Admin" : "User");
+                stringBuilder.append(user.getRole().getRoleId() == 2 ? "Admin" : "User");
                 stringBuilder.append("</td>");
                 stringBuilder.append("<td>");
                 stringBuilder.append("<form action=\"/edit\"  method=\"get\">\n")
                     .append("<input type=\"hidden\" name=\"userId\" value=")
-                    .append(user.getId()).append(">\n")
+                    .append(user.getUserId()).append(">\n")
                     .append("<button type=\"submit\" class=\"btn btn-info ")
                     .append("\">Edit</button>\n")
                     .append("<a href=\"/delete?userLogin=").append(user.getLogin()).append("\"")

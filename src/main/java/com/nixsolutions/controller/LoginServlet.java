@@ -1,7 +1,7 @@
-package com.nixsolutions.servlet;
+package com.nixsolutions.controller;
 
-import com.nixsolutions.HibernateUserDao;
-import com.nixsolutions.entity.User;
+import com.nixsolutions.service.HibernateUserDao;
+import com.nixsolutions.domain.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

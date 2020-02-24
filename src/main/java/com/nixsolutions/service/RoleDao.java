@@ -1,6 +1,6 @@
-package com.nixsolutions.dao;
+package com.nixsolutions.service;
 
-import com.nixsolutions.entity.Role;
+import com.nixsolutions.domain.Role;
 
 public interface RoleDao {
     void create(Role role);

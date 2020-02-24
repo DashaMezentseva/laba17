@@ -1,6 +1,6 @@
-package com.nixsolutions.dao;
+package com.nixsolutions.service;
 
-import com.nixsolutions.entity.User;
+import com.nixsolutions.domain.User;
 import java.util.List;
 
 public interface UserDao {

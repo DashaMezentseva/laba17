@@ -1,11 +1,7 @@
 package com.nixsolutions.util;
 
-import com.nixsolutions.entity.Role;
-import com.nixsolutions.entity.User;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory=buildSessionFactory();

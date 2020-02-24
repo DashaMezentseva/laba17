@@ -1,18 +1,12 @@
-package com.nixsolutions;
+package com.nixsolutions.service;
 
-import com.nixsolutions.dao.UserDao;
-import com.nixsolutions.entity.Role;
-import com.nixsolutions.entity.User;
+import com.nixsolutions.service.UserDao;
+import com.nixsolutions.domain.User;
 import com.nixsolutions.util.HibernateUtil;
-import java.util.ArrayList;
+
 import java.util.List;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
-import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUserDao implements UserDao {
 

@@ -1,9 +1,5 @@
 package com.nixsolutions;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -11,20 +7,25 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.h2.H2DataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DBUnitConfig {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBTest {
 
     protected IDataSet dataSet;
     protected ITable roleTable;
     private IDatabaseTester tester;
 
     private static final Logger LOGGER = LoggerFactory
-        .getLogger(DBUnitConfig.class);
+            .getLogger(com.nixsolutions.DBUnitConfig.class);
 
     private static final String FILL_DATASET = "dataset/fillTable.xml";
 
@@ -36,13 +37,13 @@ public class DBUnitConfig {
     protected IDatabaseConnection createConnection() throws Exception {
         Class.forName("org.h2.Driver");
         Connection jdbcConnection = DriverManager.getConnection(
-            "jdbc:h2:mem:lab16;DB_CLOSE_DELAY=-1;", "sa", "");
+                "jdbc:h2:mem:lab16;DB_CLOSE_DELAY=-1;", "sa", "");
 
         IDatabaseConnection dbUnitConnection = new DatabaseConnection(
-            jdbcConnection);
+                jdbcConnection);
         DatabaseConfig dbConfig = dbUnitConnection.getConfig();
         dbConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
-            new H2DataTypeFactory());
+                new H2DataTypeFactory());
 
         return dbUnitConnection;
     }
@@ -66,14 +67,28 @@ public class DBUnitConfig {
 
     }
 
-    public void setUp() throws Exception {
-
+    public ITable getTableFromFile(String tableName, String xmlFilePath)
+            throws Exception {
+        FlatXmlDataSet dataSet = new FlatXmlDataSetBuilder()
+                .build(Thread.currentThread().getContextClassLoader()
+                        .getResourceAsStream(xmlFilePath));
+        return dataSet.getTable(tableName);
     }
 
+    public void fill(String dataSetPath) throws Exception {
 
-    protected DatabaseOperation getSetUpOperation() throws Exception
-    {
-        return DatabaseOperation.CLEAN_INSERT;
+        IDataSet dataSet = new FlatXmlDataSetBuilder()
+                .build(Thread.currentThread().getContextClassLoader()
+                        .getResourceAsStream(dataSetPath));
+        DatabaseOperation.CLEAN_INSERT.execute(createConnection(),
+                dataSet);
     }
-
 }
+
+
+
+
+
+
+
+

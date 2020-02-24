@@ -5,16 +5,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import com.nixsolutions.DBUnitConfig;
-import com.nixsolutions.dao.UserDao;
-import com.nixsolutions.entity.Role;
-import com.nixsolutions.entity.User;
-import java.util.ArrayList;
-import java.util.List;
+import com.nixsolutions.service.HibernateRoleDao;
+import com.nixsolutions.service.UserDao;
+import com.nixsolutions.domain.Role;
+import com.nixsolutions.domain.User;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.junit.Before;
-import org.junit.Test;
 
 public class HibernateUserDaoTest extends DBUnitConfig {
 

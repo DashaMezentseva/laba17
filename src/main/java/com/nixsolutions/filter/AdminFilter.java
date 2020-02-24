@@ -1,6 +1,6 @@
 package com.nixsolutions.filter;
 
-import com.nixsolutions.entity.User;
+import com.nixsolutions.domain.User;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

@@ -1,8 +1,8 @@
-package com.nixsolutions.servlet;
+package com.nixsolutions.controller;
 
-import com.nixsolutions.HibernateUserDao;
-import com.nixsolutions.entity.Role;
-import com.nixsolutions.entity.User;
+import com.nixsolutions.service.HibernateUserDao;
+import com.nixsolutions.domain.Role;
+import com.nixsolutions.domain.User;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;

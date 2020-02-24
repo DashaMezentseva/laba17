@@ -1,14 +1,10 @@
 package com.nixsolutions.tag;
 
-import static java.time.temporal.ChronoUnit.YEARS;
-
-import com.nixsolutions.entity.User;
+import com.nixsolutions.domain.User;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;

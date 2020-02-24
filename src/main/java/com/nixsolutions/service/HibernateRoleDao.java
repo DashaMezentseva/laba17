@@ -1,16 +1,11 @@
-package com.nixsolutions;
+package com.nixsolutions.service;
 
-import com.nixsolutions.dao.RoleDao;
-import com.nixsolutions.entity.Role;
-import com.nixsolutions.entity.User;
+import com.nixsolutions.service.RoleDao;
+import com.nixsolutions.domain.Role;
 import com.nixsolutions.util.HibernateUtil;
 import javax.persistence.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 public class HibernateRoleDao implements RoleDao {
 

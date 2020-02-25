@@ -6,17 +6,26 @@ import com.nixsolutions.util.HibernateUtil;
 import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HibernateRoleDao implements RoleDao {
 
+    private static final Logger LOG = LoggerFactory
+            .getLogger(HibernateRoleDao.class);
+
     private static final String FIND_ROLE_BY_NAME =
-        "FROM Role r WHERE r.name = :name";
+            "FROM Role r WHERE r.name = :name";
 
 
     @Override
     public void create(Role role) {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+        if (role == null){
+            LOG.error("Role = null", new NullPointerException());
+            throw new NullPointerException();
+        }
 
         try {
             transaction = session.beginTransaction();
@@ -26,7 +35,8 @@ public class HibernateRoleDao implements RoleDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot create a role", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -38,6 +48,11 @@ public class HibernateRoleDao implements RoleDao {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
 
+        if (role == null){
+            LOG.error("Role = null", new NullPointerException());
+            throw new NullPointerException();
+        }
+
         try {
             transaction = session.beginTransaction();
             session.update(role);
@@ -46,7 +61,8 @@ public class HibernateRoleDao implements RoleDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot update a role", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -58,6 +74,11 @@ public class HibernateRoleDao implements RoleDao {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
 
+        if (role == null){
+            LOG.error("Role = null", new NullPointerException());
+            throw new NullPointerException();
+        }
+
         try {
             transaction = session.beginTransaction();
             session.remove(role);
@@ -66,7 +87,8 @@ public class HibernateRoleDao implements RoleDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot remove a role", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -77,6 +99,11 @@ public class HibernateRoleDao implements RoleDao {
     public Role findByName(String name) {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+
+        if (name == null || name.isEmpty()){
+            LOG.error("name = null or is empty", new NullPointerException());
+            throw new NullPointerException();
+        }
         Role role = null;
         try {
             transaction = session.beginTransaction();
@@ -89,7 +116,8 @@ public class HibernateRoleDao implements RoleDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot find by name a role", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }

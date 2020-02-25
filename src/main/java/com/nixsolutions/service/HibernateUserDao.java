@@ -7,16 +7,21 @@ import com.nixsolutions.util.HibernateUtil;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HibernateUserDao implements UserDao {
 
+    private static final Logger LOG = LoggerFactory
+            .getLogger(HibernateRoleDao.class);
+
     private static final String FIND_ALL_USERS = "FROM User";
     private static final String FIND_USER_BY_LOGIN =
-        "FROM User u WHERE u.login = :login";
+            "FROM User u WHERE u.login = :login";
     private static final String FIND_USER_BY_EMAIL =
-        "FROM User u WHERE u.email = :email";
+            "FROM User u WHERE u.email = :email";
     private static final String FIND_USER_BY_ID =
-        "FROM User u WHERE u.userId = :userId";
+            "FROM User u WHERE u.userId = :userId";
 
 
     @Override
@@ -24,6 +29,10 @@ public class HibernateUserDao implements UserDao {
 
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+        if (user == null) {
+            LOG.error("User = null", new NullPointerException());
+            throw new NullPointerException();
+        }
 
         try {
             transaction = session.beginTransaction();
@@ -33,7 +42,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot create a user", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -45,6 +55,11 @@ public class HibernateUserDao implements UserDao {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
 
+        if (user == null) {
+            LOG.error("User = null", new NullPointerException());
+            throw new NullPointerException();
+        }
+
         try {
             transaction = session.beginTransaction();
             session.update(user);
@@ -53,7 +68,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot update a user", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -65,6 +81,11 @@ public class HibernateUserDao implements UserDao {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
 
+        if (user == null) {
+            LOG.error("User = null", new NullPointerException());
+            throw new NullPointerException();
+        }
+
         try {
             transaction = session.beginTransaction();
             session.remove(user);
@@ -73,7 +94,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot remove a user", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -83,6 +105,7 @@ public class HibernateUserDao implements UserDao {
     public List<User> findAll() {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+
         List<User> users = null;
 
         try {
@@ -95,7 +118,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot find all users", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -106,6 +130,10 @@ public class HibernateUserDao implements UserDao {
     public User findByLogin(String login) {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+        if (login == null || login.isEmpty()) {
+            LOG.error("login is null or empty", new NullPointerException());
+            throw new NullPointerException();
+        }
         User user = null;
         try {
             transaction = session.beginTransaction();
@@ -119,7 +147,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot find a user by login", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -130,6 +159,10 @@ public class HibernateUserDao implements UserDao {
     public User findByEmail(String email) {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+        if (email == null || email.isEmpty()) {
+            LOG.error("email is null or empty", new NullPointerException());
+            throw new NullPointerException();
+        }
         User user = null;
         try {
             transaction = session.beginTransaction();
@@ -142,7 +175,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot find a user by email", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
@@ -152,6 +186,10 @@ public class HibernateUserDao implements UserDao {
     public User findById(Long id) {
         Session session= HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
+        if (id == null) {
+            LOG.error("id is null ", new NullPointerException());
+            throw new NullPointerException();
+        }
         User user = null;
 
         try {
@@ -165,7 +203,8 @@ public class HibernateUserDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            LOG.error("Cannot find a user by id", e);
+            throw new RuntimeException(e);
         } finally {
             session.close();
         }
